@@ -1,0 +1,1 @@
+In 02.Nodule_analysis/Nodule_analysis.Run_scTOUR.ipynb, the cell type labeled "Peripheral_tissues" in the final_sublineage_annotation column was renamed "Mixed" in the manuscript. We retained the notebook in its original form to preserve a record of the analysis as originally performed.
