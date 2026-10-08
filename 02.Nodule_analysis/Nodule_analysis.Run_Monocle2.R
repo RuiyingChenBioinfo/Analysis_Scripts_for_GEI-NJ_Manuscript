@@ -6,7 +6,7 @@ library(ggplot2)
 
 packageVersion("monocle") # 2.30.1
 
-seurat_obj <- readRDS("S17_crop.rds")
+seurat_obj <- readRDS("Nodule_SeuratObject.rds")
 seurat_obj
 
 DefaultAssay(seurat_obj) <- "RNA"
@@ -54,11 +54,11 @@ cds <- reduceDimension(cds,max_components = 2, method = "DDRTree")
 
 cds <- orderCells(cds, reverse = T) # This is set to make Infected_Zone as the terminal
 
-col <- c('Early_nodule_cortex'='#a6d96a', 'Infected_Zone'='#f8766d', 'Meristems'='#336699', 'Vascular_tissue'='#fdb863','Peripheral_tissues'='#9970ab')
+col <- c('Early_nodule_cortex'='#a6d96a', 'Infected_Zone'='#f8766d', 'Meristems'='#336699', 'Vascular_tissue'='#fdb863','Mixed'='#9970ab')
 pdf("Nodule_Monocle2_plot.pdf",6,5)
 plot_cell_trajectory(cds, color_by = "Pseudotime")
 plot_cell_trajectory(cds, color_by = "State")
-plot_cell_trajectory(cds, color_by = "final_sublineage_annotation") + scale_color_manual(values = col)
+plot_cell_trajectory(cds, color_by = "Celltype") + scale_color_manual(values = col)
 dev.off()
 
-saveRDS(cds, "Nodule_after_orderCells.rds")
+#saveRDS(cds, "Nodule_after_orderCells.rds")
