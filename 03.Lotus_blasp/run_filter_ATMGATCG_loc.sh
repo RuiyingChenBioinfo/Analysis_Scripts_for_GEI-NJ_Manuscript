@@ -1,0 +1,1 @@
+awk -F '\t' 'NR == 1 || $3 ~ /^(ATCG|ATMG)/' Lotus_vs_Arabidopsis.with_LOC.tsv > Lotus_vs_Arabidopsis.with_LOC_ATCG_ATMG.tsv

@@ -1,0 +1,1 @@
+blastp -task blastp -query Lotus_data/lotus_proteins.faa -db Ara_data/arabidopsis_db -evalue 1e-5 -seg yes -soft_masking true -max_target_seqs 5000 -max_hsps 1 -num_threads 8 -outfmt "6 qseqid sseqid pident length nident mismatch gapopen qstart qend sstart send evalue bitscore score qlen slen" -out Lotus_vs_Arabidopsis.blastp.tsv
