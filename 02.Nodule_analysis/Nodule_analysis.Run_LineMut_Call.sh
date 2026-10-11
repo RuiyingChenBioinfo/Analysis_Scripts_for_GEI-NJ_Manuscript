@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -eo pipefail
 
-WORKDIR=/jdfsbjcas1/ST_BJ/P21Z28400N0234/litianle/9_LineMut_test
+WORKDIR=litianle/9_LineMut_test
 BAMDIR=${WORKDIR}/1010
 LINEMUT=linemut_call
 REF=${WORKDIR}/genome.fasta
@@ -109,7 +109,7 @@ chmod +x ${JOB}
 
 qsub -cwd \
   -l vf=200g,num_proc=16 \
-  -P P21Z28400N0234_super \
+  -P P_super \
   -binding linear:16 \
   -q st_supermem.q \
   -N LineMut_sec17_UB_5ct_mixed \
