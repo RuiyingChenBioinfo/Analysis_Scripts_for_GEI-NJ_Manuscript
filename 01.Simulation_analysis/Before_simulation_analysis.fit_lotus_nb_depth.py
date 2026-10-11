@@ -1,5 +1,6 @@
 # Fit a weighted negative binomial model to Lotus bin50 UMI depths; ratios are unused.
 # Define accessibility using pooled unit depth >= 3 and retain bin-level zeros.
+# Usage: python Before_simulation_analysis.fit_lotus_nb_depth.py --sc-depth sc_depth.h5ad --unit-depth unit_depth.h5ad
 
 import argparse
 import hashlib
