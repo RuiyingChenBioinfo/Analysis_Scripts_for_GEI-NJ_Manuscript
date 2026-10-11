@@ -1,7 +1,7 @@
 # Reproduce pooled callability from LineMut unit depth; no ratio input is used.
 # Pool cortex and vascular depths before applying the depth threshold.
 # Shared/specific percentages use the callable union as their denominator.
-# Usage: python lotus_callability_calibration.py --depth unit_depth.h5ad
+# Usage: python Before_simulation_analysis.lotus_callability_calibration.py --depth unit_depth.h5ad
 
 import argparse
 from collections import Counter
