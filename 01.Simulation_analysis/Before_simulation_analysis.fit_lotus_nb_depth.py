@@ -1,8 +1,5 @@
 # Fit a weighted negative binomial model to Lotus bin50 UMI depths; ratios are unused.
 # Define accessibility using pooled unit depth >= 3 and retain bin-level zeros.
-# Weight states equally and exclusive/shared entries 1:3 within each state.
-# Without --bin-map, recover bin groups from exact sc-to-unit depth aggregation.
-# Cross-check the fit using profile likelihood, joint optimization, and a score root.
 
 import argparse
 import hashlib
