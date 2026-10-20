@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>GEI-NJ 0.2.0.4 tutorial</title><style>body{font-family:system-ui,-apple-system,sans-serif;line-height:1.65;color:#25313d;background:#fff;max-width:980px;margin:0 auto;padding:36px 24px}h1,h2,h3{line-height:1.25;color:#15384d}h2{margin-top:2em;border-bottom:1px solid #dbe3e8;padding-bottom:8px}a{color:#126482}pre{background:#f3f6f8;border:1px solid #dbe3e8;padding:16px;overflow:auto;border-radius:4px;line-height:1.5}code{font-family:ui-monospace,monospace;font-size:.93em}table{border-collapse:collapse;width:100%;margin:18px 0}th,td{border:1px solid #dbe3e8;padding:10px;text-align:left;vertical-align:top}th{background:#f3f6f8}.note{border-left:3px solid #126482;padding:4px 16px;background:#f3f8fa}nav{margin-bottom:30px}small{color:#526170}@media(max-width:640px){body{padding:20px 14px}table{font-size:.9em}}</style></head><body>
+<nav><a href="../README.md">GEI-NJ README</a> · <a href="Tutorial_GEI_NJ.html">Tutorial</a> · <a href="API.html">API reference</a></nav>
+<h1>GEI-NJ tutorial</h1><p>Version 0.2.0.4. This example uses matched SNV depth and ALT ratio matrices to construct a rooted cell relationship tree. Install the package and RapidNJ as described in the <a href="../README.md">README</a>.</p>
+<h2>1. Load and validate the inputs</h2><pre><code>import anndata as ad
+from gei_nj import comb_depth_ratio, filter_snvs, assign_state, zero_filling, build_nj
+
+ad_depth = ad.read_h5ad(&quot;unit_depth.h5ad&quot;)
+ad_ratio = ad.read_h5ad(&quot;unit_ratio.h5ad&quot;)
+adata = comb_depth_ratio(ad_depth, ad_ratio)</code></pre><p>Rows are cells or cell groups and columns are SNVs. Inputs must have matching, unique names. Depths are finite, nonnegative integer counts. At positive depth, ratios are finite observed ALT/total values in [0, 1]. At zero depth, use 0 or NaN; both represent missing data. Input NaNs generate a warning, and positive-depth NaNs raise an error. Keep raw ratios rather than rounded or pre-discretized values. The combined object stores original ratios in <code>X</code> and per-entry total sequencing depths in <code>layers["total_depth"]</code>.</p>
+<h2>2. Filter SNVs</h2><pre><code>filtered = filter_snvs(
+    adata,
+    min_total_depth=5,
+    remove_germline=True,
+    min_callable_cells_germline=3,
+    min_pooled_ratio_germline=0.90,
+    min_E_germline=10,
+)</code></pre><p>Retain SNVs with depth summed across cells of at least 5. Candidate homozygous ALT germline sites are removed when at least three cells have positive depth and either their pooled ALT ratio is at least 0.90 or their all-ALT e-value is at least 10. The three parameters ending in <code>_germline</code> apply only when <code>remove_germline=True</code>. This identifies candidate sites and does not confirm their biological origin.</p>
+<p>Optionally provide a headerless, single-column TSV with exact identifiers matching <code>var_names</code>:</p><pre><code>filtered = filter_snvs(
+    adata,
+    exclude_snvs=&quot;examples/organelle_SNV_candidates.tsv&quot;,
+)</code></pre><p>The <a href="../examples/organelle_SNV_candidates.tsv">example list</a> is user-specified and is not applied automatically. Replace it with loci appropriate to the dataset. Setting <code>remove_germline=False</code> disables candidate germline filtering but retains depth and user-list filtering.</p>
+<h2>3. Assign states and fill non-callable entries</h2><pre><code>two_state = assign_state(filtered, method=&quot;two-state&quot;, state_low=0.10)
+two_state = zero_filling(two_state, min_callable_depth=1)</code></pre><p>Observed ratios below 0.10 become 0; ratios at or above 0.10 become 1. Zero-filling then sets entries with depth below 1 to 0. Increasing <code>min_callable_depth</code> also fills positive-depth entries below the new threshold. Other entries keep their selected states. <code>assign_state()</code> writes a temporary <code>state</code> layer. Zero-filling stores the result in <code>layers["zero_filled_state"]</code>, stores the callability mask in <code>layers["callable"]</code>, and removes the temporary state layer. Both steps leave the original ratios in <code>X</code> unchanged. To repeat zero-filling or change its depth threshold, rerun <code>assign_state()</code> and then <code>zero_filling()</code>.</p>
+<h2>4. Construct and root the tree</h2><pre><code>tree = build_nj(
+    two_state,
+    do_plot=True,
+    wls_weight_power=2,
+    use_branch_lengths=False,
+    show_leaf_labels=True,
+    savepath=&quot;geinj_tree.pdf&quot;,
+    newick_path=&quot;geinj_tree.nwk&quot;,
+)</code></pre><p>Tree construction reads <code>layers["zero_filled_state"]</code>, and RapidNJ uses L1 distances between real cells. WLS then fits the position of an all-reference profile on the fixed NJ tree and roots at its attachment point. The returned tree contains real cells only. WLS weights are <code>(1 + distance_to_reference) ** -2</code> by default.</p>
+<p>The default plot aligns the tips to show topology. To draw according to branch lengths, use <code>use_branch_lengths=True</code>. Both options use the same tree and root. Saved Newick retains the computed branch lengths; these are not calibrated mutation counts or elapsed time.</p>
+<p>For group colors, provide an observation column, for example <code>group_key="group"</code>, when that column is present. To save a tree without making a plot:</p><pre><code>tree = build_nj(two_state, do_plot=False, newick_path=&quot;geinj_tree.nwk&quot;)</code></pre><h2>5. Keep continuous ALT ratios as an alternative</h2><pre><code>continuous = assign_state(filtered, method=&quot;continuous&quot;)
+continuous = zero_filling(continuous, min_callable_depth=1)
+tree_continuous = build_nj(
+    continuous,
+    do_plot=False,
+    newick_path=&quot;continuous_tree.nwk&quot;,
+)</code></pre><p>This alternative uses the same filtering, zero-filling, L1, and WLS steps. It changes only the state representation. Preprocessing functions copy by default, so the filtered input can be reused. Original ratios remain in <code>X</code> and are used when changing the state representation. For this method, observed ratios are assigned directly as continuous states.</p>
+<p>For full parameter signatures, see the <a href="API.html">API reference</a>. For release checks and exact-version archiving, see <a href="../RELEASE.md">RELEASE.md</a>.</p>
+</body></html>

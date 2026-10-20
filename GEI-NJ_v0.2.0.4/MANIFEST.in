@@ -1,0 +1,5 @@
+include LICENSE README.md CHANGELOG.md CITATION.cff RELEASE.md VALIDATION.md
+include .github/workflows/tests.yml
+recursive-include assets *.html
+recursive-include examples *.tsv
+recursive-include tests *.py
