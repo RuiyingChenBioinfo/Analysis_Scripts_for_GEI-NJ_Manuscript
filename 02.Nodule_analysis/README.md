@@ -1,5 +1,5 @@
 **run_samtools-UR2UB.sh**  
-Filters the nodule BAM and constructs `UB` tags from `UR`, `Cx`, and `Cy` tags for downstream molecule-aware SNV analysis.
+Filters the nodule BAM and constructs `UB` tags from `UR`, `Cx`, and `Cy` tags for downstream SNV analysis.
 
 **run_GATK_for_GEI-NJ_selectCBs.sh**  
 Selects spatial bins using metadata barcodes, performs per-bin SNV calling and filtering with GATK, and generates the depth and ALT-ratio matrices (`sc_depth.h5ad` and `sc_ratio.h5ad`) for GEI-NJ.
