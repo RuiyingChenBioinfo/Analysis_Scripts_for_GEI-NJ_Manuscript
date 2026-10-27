@@ -11,4 +11,4 @@ Selects one best hit per *Lotus* gene, then extracts genes whose best-hit subjec
 Contains the selected best BLASTP hit for each *Lotus* gene represented in the search results.
 
 **Lotus_vs_Arabidopsis.loc_best_hit.ATCG_ATMG.tsv**  
-Contains 218 candidate *Lotus* genes whose best hits match proteins encoded by the *Arabidopsis* chloroplast or mitochondrial genome. This gene set was used for sensitivity analyses of downstream SNV results.
+Contains 218 candidate *Lotus* genes whose best hits match proteins encoded by the *Arabidopsis* chloroplast or mitochondrial genome.
