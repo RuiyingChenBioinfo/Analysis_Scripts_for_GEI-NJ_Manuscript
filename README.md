@@ -1,6 +1,6 @@
 # Analysis Scripts for the GEI-NJ Manuscript
 
-This repository contains the scripts and notebooks used for the simulation study and real-data analyses presented in the GEI-NJ manuscript. The GEI-NJ Python package is available separately at [GEI-NJ](https://github.com/RuiyingChenBioinfo/GEI-NJ).
+This repository contains the scripts and notebooks used for the simulation study and real-data analyses presented in the GEI-NJ manuscript, as well as additional analyses reported in the revision response. The GEI-NJ Python package is available separately at [GEI-NJ](https://github.com/RuiyingChenBioinfo/GEI-NJ).
 
 ## Repository contents
 
