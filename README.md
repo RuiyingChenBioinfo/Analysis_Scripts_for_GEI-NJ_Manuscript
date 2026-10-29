@@ -16,6 +16,9 @@ Performs BLASTP-based comparisons between *Lotus japonicus* and *Arabidopsis tha
 **[04.Mito_MDA_PT_analysis](./04.Mito_MDA_PT_analysis)**  
 Compares GEI-NJ binary and continuous modes with DENDRO using the MDA_PT mitochondrial SNV dataset and evaluates the inferred trees against experimentally defined clonal labels.
 
+**[05.Revision_depth_related_Analysis](./05.Revision_depth_related_Analysis)**  
+Contains `analyze_nodule_response_all_bins.py`, used for depth-related analyses reported in the revision response. It summarizes SNV depth and callability in the *Lotus japonicus* nodule dataset and assesses associations of tree distances with sequencing depth, callability, gene expression, and spatial position.
+
 ## Usage
 
 See the scripts and available README files in each subdirectory for analysis details and execution instructions. External input datasets and dependencies are required, and some file paths may need to be adjusted for the local environment.
